@@ -1,4 +1,6 @@
-import math, torch, torch.nn.functional as F
+import math
+import torch
+import torch.nn.functional as F
 from torch import nn
 from transformers.activations import ACT2FN
 from transformers import PreTrainedModel, GenerationMixin, PretrainedConfig
@@ -94,10 +96,12 @@ def precompute_freqs_cis(
             rope_scaling.get("attention_factor", 1.0),
         )
         if end / orig_max > 1.0:
-            inv_dim = lambda b: (
-                (dim * math.log(orig_max / (b * 2 * math.pi)))
-                / (2 * math.log(rope_base))
-            )
+
+            def inv_dim(b):
+                return (dim * math.log(orig_max / (b * 2 * math.pi))) / (
+                    2 * math.log(rope_base)
+                )
+
             low, high = (
                 max(math.floor(inv_dim(beta_fast)), 0),
                 min(math.ceil(inv_dim(beta_slow)), dim // 2 - 1),
@@ -335,7 +339,7 @@ class MiniMindModel(nn.Module):
         self.embed_tokens = nn.Embedding(config.vocab_size, config.hidden_size)
         self.dropout = nn.Dropout(config.dropout)
         self.layers = nn.ModuleList(
-            [MiniMindBlock(l, config) for l in range(self.num_hidden_layers)]
+            [MiniMindBlock(layer, config) for layer in range(self.num_hidden_layers)]
         )
         self.norm = RMSNorm(config.hidden_size, eps=config.rms_norm_eps)
         freqs_cos, freqs_sin = precompute_freqs_cis(
@@ -391,7 +395,7 @@ class MiniMindModel(nn.Module):
             presents.append(present)
         hidden_states = self.norm(hidden_states)
         aux_loss = sum(
-            [l.mlp.aux_loss for l in self.layers if isinstance(l.mlp, MOEFeedForward)],
+            [layer.mlp.aux_loss for layer in self.layers if isinstance(layer.mlp, MOEFeedForward)],
             hidden_states.new_zeros(1).squeeze(),
         )
         return hidden_states, presents, aux_loss
