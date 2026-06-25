@@ -539,7 +539,9 @@ if __name__ == "__main__":
 
     # ========== 8. 开始训练 ==========
     for epoch in range(start_epoch, args.epochs):
-        train_sampler and train_sampler.set_epoch(epoch)
+        if train_sampler:
+            train_sampler.set_epoch(epoch)
+
         setup_seed(42 + epoch)
         indices = torch.randperm(len(train_ds)).tolist()
         skip = start_step if (epoch == start_epoch and start_step > 0) else 0
