@@ -1,0 +1,12 @@
+{
+    "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python",
+    "python.analysis.useLibraryCodeForTypes": true,
+    "python.analysis.extraPaths": [
+        "${workspaceFolder}/.venv/Lib/site-packages"
+    ],
+    "[python]": {
+        "editor.defaultFormatter": "charliermarsh.ruff",
+        // "editor.formatOnSave": true,
+    },
+    "python.analysis.typeCheckingMode": "basic",
+}
