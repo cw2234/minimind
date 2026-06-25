@@ -8,19 +8,16 @@ import datasets  # noqa: F401  # Windows pyarrow/torch DLL conflict workaround (
 import argparse
 import math
 import re
-import gc
 import warnings
 import torch
 import torch.nn.functional as F
 import torch.distributed as dist
-from transformers import AutoTokenizer
 from contextlib import nullcontext
 from torch import optim
 from torch.nn.parallel import DistributedDataParallel
 from torch.utils.data import DataLoader, DistributedSampler
 from torch.optim.lr_scheduler import CosineAnnealingLR
-from transformers import AutoModel
-from model.model_minimind import MiniMindConfig, MiniMindForCausalLM
+from model.model_minimind import MiniMindConfig
 from dataset.lm_dataset import RLAIFDataset
 from trainer.trainer_utils import (
     Logger,

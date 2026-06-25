@@ -15,7 +15,7 @@ import torch.distributed as dist
 from abc import ABC, abstractmethod
 from contextlib import nullcontext
 from dataclasses import dataclass
-from typing import List, Optional, Tuple
+from typing import List, Optional
 from torch import Tensor
 from torch.nn.parallel import DistributedDataParallel
 from transformers import AutoTokenizer
